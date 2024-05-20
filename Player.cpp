@@ -1,386 +1,16 @@
 #include "Player.h"
 
-std::vector<std::string> positions = {
-    "Point Guard",
-    "Shooting Guard",
-    "Small Forward",
-    "Power Forward",
-    "Center"
-};
-
-// Define archetypes and their weight distributions
-std::map<std::string, std::map<std::string, std::map<std::string, std::pair<int, int>>>> archetypes = {
-    {"Point Guard", {
-        {"Floor General", {
-            {"dunk", {30, 70}},
-            {"insideShot", {40, 80}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {50, 90}},
-            {"freeThrow", {50, 90}},
-            {"passing", {60, 99}},
-            {"dribbling", {60, 99}},
-            {"interiorDefense", {30, 70}},
-            {"perimeterDefense", {50, 90}},
-            {"steal", {40, 80}},
-            {"block", {30, 70}},
-            {"rebounding", {30, 70}},
-        }},
-        {"Scoring Guard", {
-            {"dunk", {50, 90}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {60, 99}},
-            {"threePointShot", {60, 99}},
-            {"freeThrow", {60, 99}},
-            {"passing", {40, 80}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {30, 70}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {30, 70}},
-            {"rebounding", {30, 70}},
-        }},
-        {"Lockdown Guard", {
-            {"dunk", {40, 80}},
-            {"insideShot", {40, 80}},
-            {"midRangeShot", {40, 80}},
-            {"threePointShot", {40, 80}},
-            {"freeThrow", {40, 80}},
-            {"passing", {40, 80}},
-            {"dribbling", {40, 80}},
-            {"interiorDefense", {50, 90}},
-            {"perimeterDefense", {60, 99}},
-            {"steal", {60, 99}},
-            {"block", {40, 80}},
-            {"rebounding", {30, 70}},
-        }},
-        {"Pass-First Playmaker", {
-            {"dunk", {30, 70}},
-            {"insideShot", {40, 80}},
-            {"midRangeShot", {40, 80}},
-            {"threePointShot", {40, 80}},
-            {"freeThrow", {50, 90}},
-            {"passing", {60, 99}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {30, 70}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {30, 70}},
-            {"rebounding", {30, 70}},
-        }},
-        {"Combo Guard", {
-            {"dunk", {50, 90}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {50, 90}},
-            {"freeThrow", {50, 90}},
-            {"passing", {50, 90}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {40, 80}},
-            {"perimeterDefense", {50, 90}},
-            {"steal", {40, 80}},
-            {"block", {30, 70}},
-            {"rebounding", {40, 80}},
-        }},
-    }},
-    {"Shooting Guard", {
-        {"Sharpshooter", {
-            {"dunk", {40, 80}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {60, 99}},
-            {"threePointShot", {60, 99}},
-            {"freeThrow", {60, 99}},
-            {"passing", {40, 80}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {30, 70}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {30, 70}},
-            {"rebounding", {30, 70}},
-        }},
-        {"Slasher", {
-            {"dunk", {60, 99}},
-            {"insideShot", {60, 99}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {40, 80}},
-            {"freeThrow", {50, 90}},
-            {"passing", {40, 80}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {40, 80}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {40, 80}},
-            {"rebounding", {40, 80}},
-        }},
-        {"Two-Way Guard", {
-            {"dunk", {50, 90}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {50, 90}},
-            {"freeThrow", {50, 90}},
-            {"passing", {40, 80}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {50, 90}},
-            {"perimeterDefense", {60, 99}},
-            {"steal", {50, 90}},
-            {"block", {40, 80}},
-            {"rebounding", {40, 80}},
-        }},
-        {"Mid-Range Specialist", {
-            {"dunk", {40, 80}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {60, 99}},
-            {"threePointShot", {40, 80}},
-            {"freeThrow", {50, 90}},
-            {"passing", {40, 80}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {40, 80}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {30, 70}},
-            {"rebounding", {40, 80}},
-        }},
-        {"Glue Guy", {
-            {"dunk", {50, 90}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {50, 90}},
-            {"freeThrow", {50, 90}},
-            {"passing", {40, 80}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {40, 80}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {50, 90}},
-            {"block", {30, 70}},
-            {"rebounding", {40, 80}},
-        }},
-    }},
-    {"Small Forward", {
-        {"Versatile Wing", {
-            {"dunk", {50, 90}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {50, 90}},
-            {"freeThrow", {50, 90}},
-            {"passing", {50, 90}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {50, 90}},
-            {"perimeterDefense", {50, 90}},
-            {"steal", {50, 90}},
-            {"block", {40, 80}},
-            {"rebounding", {50, 90}},
-        }},
-        {"Defensive Stopper", {
-            {"dunk", {40, 80}},
-            {"insideShot", {40, 80}},
-            {"midRangeShot", {40, 80}},
-            {"threePointShot", {40, 80}},
-            {"freeThrow", {40, 80}},
-            {"passing", {40, 80}},
-            {"dribbling", {40, 80}},
-            {"interiorDefense", {50, 90}},
-            {"perimeterDefense", {60, 99}},
-            {"steal", {50, 90}},
-            {"block", {40, 80}},
-            {"rebounding", {40, 80}},
-        }},
-        {"Scoring Forward", {
-            {"dunk", {50, 90}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {50, 90}},
-            {"freeThrow", {50, 90}},
-            {"passing", {40, 80}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {40, 80}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {40, 80}},
-            {"rebounding", {40, 80}},
-        }},
-        {"3-and-D", {
-            {"dunk", {40, 80}},
-            {"insideShot", {40, 80}},
-            {"midRangeShot", {40, 80}},
-            {"threePointShot", {60, 99}},
-            {"freeThrow", {50, 90}},
-            {"passing", {40, 80}},
-            {"dribbling", {40, 80}},
-            {"interiorDefense", {40, 80}},
-            {"perimeterDefense", {60, 99}},
-            {"steal", {50, 90}},
-            {"block", {40, 80}},
-            {"rebounding", {40, 80}},
-        }},
-        {"Point Forward", {
-            {"dunk", {50, 90}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {50, 90}},
-            {"freeThrow", {50, 90}},
-            {"passing", {60, 99}},
-            {"dribbling", {60, 99}},
-            {"interiorDefense", {40, 80}},
-            {"perimeterDefense", {50, 90}},
-            {"steal", {50, 90}},
-            {"block", {40, 80}},
-            {"rebounding", {50, 90}},
-        }},
-    }},
-    {"Power Forward", {
-        {"Stretch Four", {
-            {"dunk", {40, 80}},
-            {"insideShot", {40, 80}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {60, 99}},
-            {"freeThrow", {50, 90}},
-            {"passing", {40, 80}},
-            {"dribbling", {40, 80}},
-            {"interiorDefense", {40, 80}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {40, 80}},
-            {"rebounding", {50, 90}},
-        }},
-        {"Post-Up Specialist", {
-            {"dunk", {50, 90}},
-            {"insideShot", {60, 99}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {30, 70}},
-            {"freeThrow", {50, 90}},
-            {"passing", {40, 80}},
-            {"dribbling", {40, 80}},
-            {"interiorDefense", {50, 90}},
-            {"perimeterDefense", {30, 70}},
-            {"steal", {30, 70}},
-            {"block", {50, 90}},
-            {"rebounding", {60, 99}},
-        }},
-        {"Defensive Anchor", {
-            {"dunk", {40, 80}},
-            {"insideShot", {40, 80}},
-            {"midRangeShot", {30, 70}},
-            {"threePointShot", {30, 70}},
-            {"freeThrow", {30, 70}},
-            {"passing", {40, 80}},
-            {"dribbling", {30, 70}},
-            {"interiorDefense", {60, 99}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {60, 99}},
-            {"rebounding", {60, 99}},
-        }},
-        {"Face-Up Forward", {
-            {"dunk", {50, 90}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {60, 99}},
-            {"threePointShot", {40, 80}},
-            {"freeThrow", {50, 90}},
-            {"passing", {40, 80}},
-            {"dribbling", {50, 90}},
-            {"interiorDefense", {40, 80}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {40, 80}},
-            {"rebounding", {50, 90}},
-        }},
-        {"Grit General", {
-            {"dunk", {40, 80}},
-            {"insideShot", {40, 80}},
-            {"midRangeShot", {40, 80}},
-            {"threePointShot", {30, 70}},
-            {"freeThrow", {30, 70}},
-            {"passing", {30, 70}},
-            {"dribbling", {30, 70}},
-            {"interiorDefense", {50, 90}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {50, 90}},
-            {"block", {50, 90}},
-            {"rebounding", {60, 99}},
-        }},
-    }},
-    {"Center", {
-        {"Traditional Big Man", {
-            {"dunk", {60, 99}},
-            {"insideShot", {60, 99}},
-            {"midRangeShot", {40, 80}},
-            {"threePointShot", {30, 70}},
-            {"freeThrow", {40, 80}},
-            {"passing", {40, 80}},
-            {"dribbling", {30, 70}},
-            {"interiorDefense", {60, 99}},
-            {"perimeterDefense", {30, 70}},
-            {"steal", {30, 70}},
-            {"block", {60, 99}},
-            {"rebounding", {60, 99}},
-        }},
-        {"Stretch Five", {
-            {"dunk", {40, 80}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {60, 99}},
-            {"freeThrow", {50, 90}},
-            {"passing", {50, 90}},
-            {"dribbling", {40, 80}},
-            {"interiorDefense", {50, 90}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {50, 90}},
-            {"rebounding", {50, 90}},
-        }},
-        {"Rim Protector", {
-            {"dunk", {40, 80}},
-            {"insideShot", {40, 80}},
-            {"midRangeShot", {30, 70}},
-            {"threePointShot", {30, 70}},
-            {"freeThrow", {30, 70}},
-            {"passing", {30, 70}},
-            {"dribbling", {30, 70}},
-            {"interiorDefense", {60, 99}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {60, 99}},
-            {"rebounding", {60, 99}},
-        }},
-        {"Athletic Big", {
-            {"dunk", {60, 99}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {30, 70}},
-            {"threePointShot", {30, 70}},
-            {"freeThrow", {40, 80}},
-            {"passing", {30, 70}},
-            {"dribbling", {30, 70}},
-            {"interiorDefense", {50, 90}},
-            {"perimeterDefense", {30, 70}},
-            {"steal", {40, 80}},
-            {"block", {50, 90}},
-            {"rebounding", {50, 90}},
-        }},
-        {"Playmaking Five", {
-            {"dunk", {40, 80}},
-            {"insideShot", {50, 90}},
-            {"midRangeShot", {50, 90}},
-            {"threePointShot", {40, 80}},
-            {"freeThrow", {50, 90}},
-            {"passing", {60, 99}},
-            {"dribbling", {40, 80}},
-            {"interiorDefense", {40, 80}},
-            {"perimeterDefense", {40, 80}},
-            {"steal", {40, 80}},
-            {"block", {40, 80}},
-            {"rebounding", {50, 90}},
-        }},
-    }}
-};
-
 // Constructors
 Player::Player() {
 
     position = positions[generateRandomStat(0, 4)];
+    generatePlayerStats();
 }
 
 Player::Player(std::string position) {
 
     this->position = position;
+    generatePlayerStats();
 }
 
 // Destructor
@@ -393,8 +23,20 @@ Player::~Player() {
 int Player::generateRandomStat(int low, int high) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(low, high);
-    return dis(gen);
+
+    // Calculate parameters for log-normal distribution
+    double logMean = std::log((low + high) / 2.0);
+    double logStdDev = (std::log(high) - std::log(low)) / 3.5; // A rough estimate
+
+    std::lognormal_distribution<> dis(logMean, logStdDev);
+
+    int value = std::round(dis(gen));
+
+    // Ensure the value is within the desired range
+    if (value < low) value = low;
+    if (value > high) value = high;
+
+    return value;
 }
 
 // Function to generate a random player
@@ -430,6 +72,7 @@ void Player::generatePlayerStats() {
     computeOverallRating();
 }
 
+// Shit
 void Player::computeOverallRating() {
 
     const auto& stat = archetypes.at(position).at(archetype);
@@ -446,7 +89,7 @@ void Player::computeOverallRating() {
               (block - stat.at("block").first) +
               (rebounding - stat.at("rebounding").first);
 
-    overall = sum * 100 / 480;
+    overall = sum * 100 / 12 / 40;
 }
 
 // Function to print player's details

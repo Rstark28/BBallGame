@@ -14,7 +14,10 @@ Game.o: Game.cpp Game.h
 Player.o: Player.cpp Player.h
 		$(CXX) $(CXXFLAGS) -c Player.cpp
 
-unit_test: unit_test_driver.o Game.o Player.o
+Team.o: Team.cpp Team.h
+		$(CXX) $(CXXFLAGS) -c Team.cpp
+
+unit_test: unit_test_driver.o Game.o Player.o Team.o
 		$(CXX) $(CXXFLAGS) $^
 
 clean:

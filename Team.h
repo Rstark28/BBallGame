@@ -2,7 +2,12 @@
 #define TEAM_H
 
 #include <string>
-#include <vectors>
+#include <vector>
+#include <iostream>
+#include "Player.h"
+
+extern std::vector<std::string> positions;
+extern std::map<std::string, std::map<std::string, std::map<std::string, std::pair<int, int>>>> archetypes;
 
 class Team {
     
@@ -15,13 +20,13 @@ public:
     ~Team();
 
 private:
-    
+
     // Characteristics
     std::string name;
-    std::sting location;
+    std::string location;
 
     // Players
-    std::vector players;
+    std::vector<Player*> players;
 
 };
 

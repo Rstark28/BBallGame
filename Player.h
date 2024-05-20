@@ -7,7 +7,11 @@
 #include <string>
 #include <vector>
 
+extern std::vector<std::string> positions;
+extern std::map<std::string, std::map<std::string, std::map<std::string, std::pair<int, int>>>> archetypes;
+
 class Player {
+
 public:
     // Constructors
     Player();
@@ -23,14 +27,6 @@ private:
 
     int generateRandomStat(int low, int high);
     void computeOverallRating();
-
-    std::vector<std::string> positions = {
-        "Point Guard",
-        "Shooting Guard",
-        "Small Forward",
-        "Power Forward",
-        "Center"
-    };
 
     // Characteristics
     std::string name;
